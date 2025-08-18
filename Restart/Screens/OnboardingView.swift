@@ -13,18 +13,33 @@ struct OnboardingView: View {
 
     var body: some View {
         VStack {
-            Image(systemName: "greetingcard.fill")
-                .imageScale(.large)
+            VStack {
+                Image(systemName: "greetingcard.fill")
+                    .imageScale(.large)
 
-            Text("Onboarding!")
-        }
-        .foregroundStyle(
-            LinearGradient(
-                colors: [Color.colorRed, Color.colorBlue],
-                startPoint: .bottomTrailing,
-                endPoint: .topLeading
+                Text("Onboarding!")
+            }
+            .foregroundStyle(
+                LinearGradient(
+                    colors: [Color.colorRed, Color.colorBlue],
+                    startPoint: .bottomTrailing,
+                    endPoint: .topLeading
+                )
             )
-        )
+
+            Button(
+                action: {
+                    
+                    isOnboardingViewActive.toggle()
+
+                    
+                },
+                label: {
+                    Text("Continue")
+                }
+            )
+
+        }
         .padding()
     }
 }

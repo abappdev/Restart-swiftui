@@ -8,20 +8,35 @@
 import SwiftUI
 
 struct HomeView: View {
+    
+    @AppStorage("isOnboarding") var isOnboardingViewActive: Bool = false
+    
     var body: some View {
         VStack {
-            Image(systemName: "house.fill")
-                .imageScale(.large)
+            VStack {
+                Image(systemName: "house.fill")
+                    .imageScale(.large)
 
-            Text("Homeview!")
-        }
-        .foregroundStyle(
-            LinearGradient(
-                colors: [Color.colorRed, Color.colorBlue],
-                startPoint: .topLeading,
-                endPoint: .bottomTrailing
+                Text("Homeview!")
+            }
+            .foregroundStyle(
+                LinearGradient(
+                    colors: [Color.colorRed, Color.colorBlue],
+                    startPoint: .topLeading,
+                    endPoint: .bottomTrailing
+                )
             )
-        )
+
+            Button(
+                action: {
+                    isOnboardingViewActive.toggle()
+                },
+                label: {
+                    Text("Restart")
+                }
+            )
+
+        }
         .padding()
     }
 }
