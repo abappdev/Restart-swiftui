@@ -10,89 +10,121 @@ import SwiftUI
 struct OnboardingView: View {
 
     @AppStorage("isOnboarding") var isOnboardingViewActive: Bool = false
+    @State private var buttonOffset: CGFloat = 0
 
     var body: some View {
-        ZStack {
-            Color("ColorBlue")
-                .ignoresSafeArea()
+        GeometryReader { geometry in
+            let screenWidth = geometry.size.width
+            let buttonWidth = screenWidth - 80
 
-            VStack(spacing: 20) {
-                Spacer()
+            ZStack {
+                Color("ColorBlue")
+                    .ignoresSafeArea()
 
-                VStack(spacing: 0) {
+                VStack(spacing: 20) {
+                    Spacer()
 
-                    Text("Share")
-                        .font(.system(size: 60))
-                        .fontWeight(.heavy)
+                    VStack(spacing: 0) {
+
+                        Text("Share")
+                            .font(.system(size: 60))
+                            .fontWeight(.heavy)
+                            .foregroundStyle(.white)
+
+                        Text(
+                            """
+                            Love blossoms when we freely share,
+                            For in giving, hearts truly care.
+                            """
+                        )
+                        .font(.system(size: 20))
+                        .fontWeight(.light)
                         .foregroundStyle(.white)
+                        .multilineTextAlignment(.center)
+                        .padding(.horizontal, 10)
+                    }
 
-                    Text(
-                        """
-                        Love blossoms when we freely share,
-                        For in giving, hearts truly care.
-                        """
-                    )
-                    .font(.system(size: 20))
-                    .fontWeight(.light)
-                    .foregroundStyle(.white)
-                    .multilineTextAlignment(.center)
-                    .padding(.horizontal, 10)
-                }
+                    ZStack {
+                        CircleGroupView(ShapeColor: .white, ShapeOpacity: 0.2)
 
-                ZStack {
-                    CircleGroupView(ShapeColor: .white, ShapeOpacity: 0.2)
+                        Image("character-1")
+                            .resizable()
+                            .scaledToFit()
+                    }
 
-                    Image("character-1")
-                        .resizable()
-                        .scaledToFit()
-                }
+                    Spacer()
 
-                Spacer()
-
-                ZStack {
-                    Capsule()
-                        .fill(.white.opacity(0.2))
-
-                    Capsule()
-                        .fill(.white.opacity(0.2))
-                        .padding(8)
-
-                    Text("Get Started")
-                        .font(.system(.title3, design: .rounded))
-                        .fontWeight(.bold)
-                        .foregroundStyle(.white)
-                        .offset(x: 20)
-
-                    HStack {
+                    ZStack {
                         Capsule()
-                            .fill(Color("ColorRed"))
-                            .frame(width: 80, height: 80)
+                            .fill(.white.opacity(0.2))
 
-                        Spacer()
-                    }
+                        Capsule()
+                            .fill(.white.opacity(0.2))
+                            .padding(8)
 
-                    HStack {
-                        ZStack {
-                            Circle()
+                        Text("Get Started")
+                            .font(.system(.title3, design: .rounded))
+                            .fontWeight(.bold)
+                            .foregroundStyle(.white)
+                            .offset(x: 20)
+
+                        HStack {
+                            Capsule()
                                 .fill(Color("ColorRed"))
-                            Circle()
-                                .fill(.black.opacity(0.15))
-                                .padding(8)
+                                .frame(width: buttonOffset + 80, height: 80)
 
-                            Image(systemName: "chevron.right.2")
-                                .font(.system(size: 24, weight: .bold))
+                            Spacer()
+                        }
 
-                        }.foregroundStyle(.white)
-                            .frame(width: 80, height: 80, alignment: .center)
-                            .onTapGesture {
-                                isOnboardingViewActive = false
-                            }
-                        Spacer()
+                        HStack {
+                            ZStack {
+                                Circle()
+                                    .fill(Color("ColorRed"))
+                                Circle()
+                                    .fill(.black.opacity(0.15))
+                                    .padding(8)
+
+                                Image(systemName: "chevron.right.2")
+                                    .font(.system(size: 24, weight: .bold))
+
+                            }.foregroundStyle(.white)
+                                .frame(
+                                    width: 80,
+                                    height: 80,
+                                    alignment: .center
+                                )
+                                .offset(x: buttonOffset)
+                                .gesture(
+                                    DragGesture()
+                                        .onChanged { gesture in
+                                            if gesture.translation.width > 0
+                                                && buttonOffset <= buttonWidth
+                                                    - 80
+                                            {
+                                                buttonOffset =
+                                                    gesture.translation.width
+                                            }
+
+                                        }
+                                        .onEnded { _ in
+                                            if buttonOffset < buttonWidth / 2 {
+                                                buttonOffset = 0
+                                            } else {
+                                                buttonOffset = buttonWidth - 80
+                                                isOnboardingViewActive = false
+                                            }
+                                        }
+                                )
+                            Spacer()
+                        }
                     }
-
+                    .frame(
+                        width: buttonWidth,
+                        height: 80,
+                        alignment: .center
+                    )
+                    .padding(20)
                 }
-                .frame(height: 80, alignment: .center)
-                .padding(20)
             }
         }
     }
